@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Do You Love Me? ❤️</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zeyada&display=swap">
+  <style>
+    /* General Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      animation: gradient 10s infinite alternate;
+      overflow: hidden;
+      font-family: 'Zeyada', cursive;
+    }
+
+    @keyframes gradient {
+      0% { background: #ff9a9e; }
+      50% { background: #fad0c4; }
+      100% { background: #ff9a9e; }
+    }
+
+    /* Paper Styling */
+    .paper {
+      padding: 20px 50px;
+      background-color: #fff5f8; /* Light pink background */
+      box-shadow: 1px 15px 20px rgba(0, 0, 0, 0.3);
+      cursor: grab;
+      user-select: none;
+      margin: 20px;
+      border-radius: 15px;
+      border: 2px solid #ff69b4;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .paper.red {
+      background-color: #fff0f3; /* Light red background */
+      border: 2px solid #e91e63;
+    }
+
+    .paper p {
+      margin: 0;
+      font-size: 30px;
+      color: #e91e63;
+      text-align: center;
+    }
+
+    /* Button Styling */
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 20px;
+      font-family: 'Zeyada', cursive;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #ffebee;
+      box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.2);
+      color: #e91e63;
+    }
+
+    button:hover {
+      background-color: #ffcdd2;
+    }
+
+    /* Polaroid Styling */
+    .polaroid {
+      position: absolute;
+      width: 200px;
+      padding: 15px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transform: rotateZ(5deg);
+      cursor: grab;
+      user-select: none;
+      border-radius: 10px;
+      border: 2px solid #ff69b4;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .polaroid img {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+
+    .polaroid p {
+      margin: 0;
+      font-size: 20px;
+      text-align: center;
+      color: #e91e63;
+    }
+
+    /* Emotional Message Styling */
+    #emotionalMessage {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      display: none;
+    }
+
+    #emotionalMessage h1 {
+      font-size: 50px;
+      color: #e91e63;
+      margin-bottom: 20px;
+    }
+
+    #emotionalMessage p {
+      font-size: 30px;
+      color: #333;
+    }
+
+    /* Email Modal Styles */
+    #emailModal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      z-index: 1001;
+      max-width: 500px;
+      width: 90%;
+      border: 2px solid #ff69b4;
+      display: none;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      0% { box-shadow: 0 0 10px #ff69b4; }
+      100% { box-shadow: 0 0 20px #e91e63; }
+    }
+
+    .email-content {
+      font-family: Arial, sans-serif;
+    }
+
+    .email-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+
+    .close-btn {
+      cursor: pointer;
+      font-size: 24px;
+      color: #e91e63;
+    }
+
+    .typing-container {
+      border: 1px solid #ddd;
+      padding: 15px;
+      min-height: 200px;
+      position: relative;
+    }
+
+    #typedMessage {
+      font-family: 'Courier New', monospace;
+      white-space: pre-wrap;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 16px;
+      background: #333;
+      animation: blink 1s infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    /* Tap to Open Button */
+    #tapToOpen {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px 40px;
+      font-size: 30px;
+      font-family: 'Zeyada', cursive;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      z-index: 1002;
+      display: none;
+    }
+
+    #tapToOpen:hover {
+      background-color: #e91e63;
+    }
+
+    /* Hearts Animation */
+    .hearts-container {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .heart {
+      position: absolute;
+      color: #ff3860;
+      animation: float 6s infinite linear;
+      font-size: 20px;
+      opacity: 0;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-20vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Kiss Emoji Animation */
+    .kiss-container {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .kiss {
+      position: absolute;
+      font-size: 30px;
+      animation: floatKiss 5s infinite linear;
+      opacity: 0;
+    }
+
+    @keyframes floatKiss {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-20vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Draggable Papers -->
+  <div class="paper">
+    <p>Drag me around!</p>
+    <p>Do you love me?</p>
+    <div class="buttons">
+      <button id="yesButton">Yes</button>
+      <button id="noButton">No</button>
+    </div>
+  </div>
+  <div class="paper red">
+    <p>You are mine 💓🥺
+   </p>
+  </div>
+
+  <!-- Draggable Polaroids (Stacked Vertically) -->
+  <div class="polaroid" style="top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-5deg); z-index: 1;">
+    <img src="https://raw.githubusercontent.com/Ranveer-afk/Hu/refs/heads/main/Snapchat-120194306.jpg" alt="Photo 1">
+    <p>My love </p>
+  </div>
+  <div class="polaroid" style="top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(5deg); z-index: 2;">
+    <img src="https://raw.githubusercontent.com/Ranveer-afk/Hu/refs/heads/main/Snapchat-1386845187.jpg" alt="Photo 2">
+    <p>my Beautiful</p>
+  </div>
+  <div class="polaroid" style="top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-3deg); z-index: 3;">
+    <img src="https://raw.githubusercontent.com/Ranveer-afk/Hu/refs/heads/main/Snapchat-1924219741.jpg" alt="Photo 3">
+    <p>My hotiee</p>
+  </div>
+  <div class="polaroid" style="top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(2deg); z-index: 4;">
+    <img src="https://raw.githubusercontent.com/Ranveer-afk/Hu/refs/heads/main/Snapchat-2093361975.jpg" alt="Photo 4">
+    <p>My princess</p>
+  </div>
+  <div class="polaroid" style="top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-4deg); z-index: 5;">
+    <img src="https://raw.githubusercontent.com/Ranveer-afk/Hu/refs/heads/main/Snapchat-617800554.jpg" alt="Photo 5">
+    <p>my wifeyy</p>
+  </div>
+  <div class="polaroid" style="top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(3deg); z-index: 6;">
+    <img src="https://raw.githubusercontent.com/Ranveer-afk/Hu/refs/heads/main/Snapchat-877881578.jpg" alt="Photo 6">
+    <p>my akhila 💗</p>
+  </div>
+
+  <!-- Emotional Message -->
+  <div id="emotionalMessage" class="hidden">
+    <h1>You've Made Me the Happiest Person! ❤️</h1>
+    <p>Every moment with you is a treasure. I can't wait to spend forever with you. I love you to the moon and back! 🌙✨</p>
+  </div>
+
+  <!-- Tap to Open Button -->
+  <button id="tapToOpen">Tap to Open 💌</button>
+
+  <!-- Email Modal -->
+  <div id="emailModal" class="hidden">
+    <div class="email-content">
+      <div class="email-header">
+        <span class="close-btn">&times;</span>
+        <h2>💌 New Message</h2>
+      </div>
+      <div class="email-body">
+        <p>From: Your Baby ❤️</p>
+        <p>Subject: My Heart's Confession</p>
+        <div class="typing-container">
+          <div id="typedMessage"></div>
+          <div class="cursor"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hearts Container -->
+  <div class="hearts-container"></div>
+
+  <!-- Kiss Emoji Container -->
+  <div class="kiss-container"></div>
+
+  <!-- Audio for Song -->
+  <audio id="valentineSong" src="/m_an_l_emre_daldal.mp3"></audio>
+
+  <script>
+    let highestZ = 1;
+
+    class Draggable {
+      constructor(element) {
+        this.element = element;
+        this.isDragging = false;
+        this.currentX = 0;
+        this.currentY = 0;
+        this.offsetX = 0;
+        this.offsetY = 0;
+        this.rotation = Math.random() * 30 - 15;
+        this.init();
+      }
+
+      init() {
+        this.element.addEventListener('mousedown', this.onMouseDown.bind(this));
+        this.element.addEventListener('touchstart', this.onTouchStart.bind(this), { passive: false });
+        this.element.style.transform = `rotateZ(${this.rotation}deg)`;
+      }
+
+      onMouseDown(e) {
+        this.isDragging = true;
+        this.offsetX = e.clientX - this.element.getBoundingClientRect().left;
+        this.offsetY = e.clientY - this.element.getBoundingClientRect().top;
+        this.element.style.zIndex = highestZ++;
+        document.addEventListener('mousemove', this.onMouseMove.bind(this));
+        document.addEventListener('mouseup', this.onMouseUp.bind(this));
+      }
+
+      onTouchStart(e) {
+        this.isDragging = true;
+        const touch = e.touches[0];
+        this.offsetX = touch.clientX - this.element.getBoundingClientRect().left;
+        this.offsetY = touch.clientY - this.element.getBoundingClientRect().top;
+        this.element.style.zIndex = highestZ++;
+        document.addEventListener('touchmove', this.onTouchMove.bind(this), { passive: false });
+        document.addEventListener('touchend', this.onTouchEnd.bind(this));
+      }
+
+      onMouseMove(e) {
+        if (this.isDragging) {
+          this.currentX = e.clientX - this.offsetX;
+          this.currentY = e.clientY - this.offsetY;
+          this.element.style.left = `${this.currentX}px`;
+          this.element.style.top = `${this.currentY}px`;
+        }
+      }
+
+      onTouchMove(e) {
+        if (this.isDragging) {
+          const touch = e.touches[0];
+          this.currentX = touch.clientX - this.offsetX;
+          this.currentY = touch.clientY - this.offsetY;
+          this.element.style.left = `${this.currentX}px`;
+          this.element.style.top = `${this.currentY}px`;
+        }
+      }
+
+      onMouseUp() {
+        this.isDragging = false;
+        document.removeEventListener('mousemove', this.onMouseMove.bind(this));
+        document.removeEventListener('mouseup', this.onMouseUp.bind(this));
+      }
+
+      onTouchEnd() {
+        this.isDragging = false;
+        document.removeEventListener('touchmove', this.onTouchMove.bind(this));
+        document.removeEventListener('touchend', this.onTouchEnd.bind(this));
+      }
+    }
+
+    // Initialize all papers and polaroids
+    const papers = document.querySelectorAll('.paper');
+    const polaroids = document.querySelectorAll('.polaroid');
+
+    papers.forEach(paper => new Draggable(paper));
+    polaroids.forEach(polaroid => new Draggable(polaroid));
+
+    // Valentine Message Logic
+    const yesButton = document.getElementById('yesButton');
+    const noButton = document.getElementById('noButton');
+    const emotionalMessage = document.getElementById('emotionalMessage');
+    const emailModal = document.getElementById('emailModal');
+    const tapToOpen = document.getElementById('tapToOpen');
+    const valentineSong = document.getElementById('valentineSong');
+    valentineSong.loop = true;
+
+    yesButton.addEventListener('click', () => {
+      emotionalMessage.style.display = 'none';
+      tapToOpen.style.display = 'block';
+      valentineSong.play();
+    });
+
+    noButton.addEventListener('click', () => {
+      alert("You have to love me no option �😢");
+      noButton.style.position = 'absolute';
+      noButton.style.left = `${Math.random() * window.innerWidth}px`;
+      noButton.style.top = `${Math.random() * window.innerHeight}px`;
+    });
+
+    // Tap to Open Button
+    tapToOpen.addEventListener('click', () => {
+      tapToOpen.style.display = 'none';
+      emailModal.style.display = 'block';
+
+      const message = `Hi Akhila, my love,  
+
+I love you so much! Today is Valentine’s Day, and I wish I could be there with you. I know your exams are important, but I miss you so much. 😭  
+
+I wish I could surprise you, hold you, and kiss you all day. That first kiss with you was everything to me. You’re my first Valentine, and I’m so lucky to have you. You make my life so special with your love, your voice, and the little things you share with me.  
+
+I’m sorry if I annoy you sometimes—I just want your attention because I love you so much. I miss our talks, your hugs, and just being close to you. I can’t wait to see you again and hold you tight.  
+
+You’re my everything, Akhila. Don’t ever leave me, okay? I love you more than anything.  
+
+Happy Valentine’s Day, my princess. 💗  
+
+Yours always,  
+Your Ranveer ❤️`;
+
+      typeMessage(message, 'typedMessage', 30);
+      createKisses();
+    });
+
+    // Email Modal Close
+    document.querySelector('.close-btn').addEventListener('click', () => {
+      emailModal.style.display = 'none';
+    });
+
+    // Hearts Animation
+    function createHearts() {
+      const container = document.querySelector('.hearts-container');
+      for (let i = 0; i < 250; i++) { // Increased number of hearts
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerHTML = '❤';
+        heart.style.left = `${Math.random() * 100}%`;
+        heart.style.animationDelay = `${Math.random() * 5}s`;
+        container.appendChild(heart);
+      }
+    }
+
+    // Kiss Emoji Animation
+    function createKisses() {
+      const container = document.querySelector('.kiss-container');
+      for (let i = 0; i < 100; i++) {
+        const kiss = document.createElement('div');
+        kiss.className = 'kiss';
+        kiss.innerHTML = '💋';
+        kiss.style.left = `${Math.random() * 100}%`;
+        kiss.style.animationDelay = `${Math.random() * 5}s`;
+        container.appendChild(kiss);
+      }
+    }
+
+    // Typing Effect
+    function typeMessage(message, elementId, speed = 50) {
+      let i = 0;
+      const elem = document.getElementById(elementId);
+      elem.innerHTML = '';
+
+      function typeWriter() {
+        if (i < message.length) {
+          elem.innerHTML += message.charAt(i);
+          i++;
+          setTimeout(typeWriter, speed);
+        }
+      }
+
+      typeWriter();
+    }
+
+    createHearts();
+
+    // Image Sequence
+    const polaroidElements = document.querySelectorAll('.polaroid');
+    let currentIndex = 0;
+
+    function showNextImage() {
+      if (currentIndex < polaroidElements.length) {
+        polaroidElements[currentIndex].style.opacity = 1;
+        currentIndex++;
+        setTimeout(showNextImage, 1000); // Adjust timing as needed
+      }
+    }
+
+    showNextImage();
+  </script>
+</body>
+</html>
